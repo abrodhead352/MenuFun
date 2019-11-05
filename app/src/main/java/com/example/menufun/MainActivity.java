@@ -3,6 +3,7 @@ package com.example.menufun;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.LauncherActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -28,8 +29,8 @@ public class MainActivity extends AppCompatActivity {
         //create an arrayAdapter
         //make sure your items show up
         //startEditActivity();
-        ListView listView = new ListView(this);
-        List<String> list = new ArrayList<>();
+        final ListView listView = new ListView(this);
+        final List<String> list = new ArrayList<>();
         list.add("Pumpkins");
         list.add("Ghosts");
         list.add("Skeletons");
@@ -47,27 +48,39 @@ public class MainActivity extends AppCompatActivity {
         listView.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
             @Override
             public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
-
+                int numChecked = listView.getCheckedItemCount();
+                mode.setTitle(numChecked + " selected");
             }
 
             @Override
             public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                return false;
+                MenuInflater menuInflater = getMenuInflater();
+                menuInflater.inflate(R.menu.contextual_action_mode_menu, menu);
+                return true;
             }
 
             @Override
             public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                //not needed for pa7
                 return false;
             }
 
+            //activates when a user clicks a CAM menu item
             @Override
             public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                switch(item.getItemId()) {
+                    case R.id.deleteMenuItem:
+                        //hint for PA7 -- check id's
+                        String temp = listView.getCheckedItemPositions().toString();
+                        mode.finish();
+                        return true;
+                }
                 return false;
             }
 
             @Override
             public void onDestroyActionMode(ActionMode mode) {
-
+                //not needed for pa7
             }
         });
     }
